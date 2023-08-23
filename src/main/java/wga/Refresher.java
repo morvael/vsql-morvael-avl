@@ -102,7 +102,7 @@ public class Refresher extends AbstractConfigurable {
     }
     else if (VISIBLE.equals(key)) {
       if (o instanceof String) {
-        o = new Boolean((String) o);
+        o = Boolean.valueOf((String) o);
       }
       visible = ((Boolean) o).booleanValue();
       launch.setVisible(visible);
@@ -140,14 +140,14 @@ public class Refresher extends AbstractConfigurable {
   protected void refresh() {
 
     // First, Find all maps with pieces
-    HashMap mapList = new HashMap();
-    Enumeration e = GameModule.getGameModule().getGameState().getPieces();
-    while (e.hasMoreElements()) {
-      GamePiece pieceOrStack = (GamePiece) e.nextElement();
+    HashMap<Map, Map> mapList = new HashMap<>();
+    Iterator<GamePiece> e = GameModule.getGameModule().getGameState().getAllPieces().iterator();
+    while (e.hasNext()) {
+      GamePiece pieceOrStack = e.next();
       if (pieceOrStack instanceof Stack) {
-        Enumeration se = ((Stack) pieceOrStack).getPieces();
-        while (se.hasMoreElements()) {
-          map = ((GamePiece) se.nextElement()).getMap();
+        Iterator<GamePiece> se = ((Stack) pieceOrStack).asList().iterator();
+        while (se.hasNext()) {
+          map = se.next().getMap();
           mapList.put(map, map);
         }
       }
@@ -158,17 +158,17 @@ public class Refresher extends AbstractConfigurable {
     }
 
     // Now process the pieces on each map
-    Iterator maps = mapList.values().iterator();
+    Iterator<Map> maps = mapList.values().iterator();
     while (maps.hasNext()) {
-      Map map = (Map) maps.next();
+      Map map = maps.next();
       if (map != null) {
       GamePiece pieces[] = map.getPieces();
       for (int i = 0; i < pieces.length; i++) {
         GamePiece pieceOrStack = pieces[i];
         if (pieceOrStack instanceof Stack) {
-          Enumeration se = ((Stack) pieceOrStack).getPieces();
-          while (se.hasMoreElements()) {
-            processPiece((GamePiece) se.nextElement());
+          Iterator<GamePiece> se = ((Stack) pieceOrStack).asList().iterator();
+          while (se.hasNext()) {
+            processPiece(se.next());
           }
           if (pieceOrStack instanceof Deck) {
             updateDeck((Deck) pieceOrStack);
@@ -199,9 +199,9 @@ public class Refresher extends AbstractConfigurable {
   protected GamePiece findNewPiece(GamePiece oldPiece) {
     GamePiece newPiece = null;
 
-    Enumeration pwe = GameModule.getGameModule().getComponents(PieceWindow.class);
-    while (pwe.hasMoreElements() && newPiece == null) {
-      AbstractBuildable b = (AbstractBuildable) pwe.nextElement();
+    Iterator<PieceWindow> pwe = GameModule.getGameModule().getComponentsOf(PieceWindow.class).iterator();
+    while (pwe.hasNext()&& newPiece == null) {
+      AbstractBuildable b = (AbstractBuildable) pwe.next();
       newPiece = checkBuildable(oldPiece, b);
     }
     return newPiece;
@@ -210,9 +210,9 @@ public class Refresher extends AbstractConfigurable {
   // Check for piece in a PieceWindow widget
   protected GamePiece checkBuildable(GamePiece oldPiece, AbstractBuildable b) {
     GamePiece newPiece = null;
-    Enumeration pwComponents = b.getBuildComponents();
-    while (pwComponents.hasMoreElements() && newPiece == null) {
-      AbstractBuildable bb = (AbstractBuildable) pwComponents.nextElement();
+    Iterator<Buildable> pwComponents = b.getBuildables().iterator();
+    while (pwComponents.hasNext()&& newPiece == null) {
+      AbstractBuildable bb = (AbstractBuildable) pwComponents.next();
       if (bb instanceof PieceSlot) {
         GamePiece p = ((PieceSlot) bb).getPiece();
         newPiece = checkNewPiece(oldPiece, p);

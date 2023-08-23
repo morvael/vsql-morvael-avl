@@ -33,6 +33,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import VASSAL.build.AbstractConfigurable;
+import VASSAL.build.AbstractToolbarItem;
 import VASSAL.build.AutoConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -54,7 +55,7 @@ import VASSAL.tools.LaunchButton;
 public class Inventory extends AbstractConfigurable implements GameComponent {
 
   protected LaunchButton launch;
-  protected ArrayList counters;
+  protected ArrayList<Counter> counters;
 
   public static final String VERSION = "1.3";
   public static final String HOTKEY = "hotkey";
@@ -133,8 +134,8 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
 
   protected void generateInventory() {
 
-    counters = new ArrayList();
-    PieceIterator pi = new PieceIterator(GameModule.getGameModule().getGameState().getPieces(), new Selector(
+    counters = new ArrayList<>();
+    PieceIterator pi = new PieceIterator(GameModule.getGameModule().getGameState().getAllPieces().iterator(), new Selector(
         incAllMaps, mapList, include));
 
     while (pi.hasMoreElements()) {
@@ -174,9 +175,9 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
     String breakVal;
     int count = 0;
 
-    Iterator i = counters.iterator();
+    Iterator<Counter> i = counters.iterator();
     while (i.hasNext()) {
-      Counter c = (Counter) i.next();
+      Counter c = i.next();
       breakVal = c.getBreakKey() + "";
       if (breakVal.equals(lastBreak)) {
         count += c.getCount();
@@ -240,7 +241,7 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
         JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), scrollPane, getConfigureName(),
+        JOptionPane.showMessageDialog(GameModule.getGameModule().getPlayerWindow(), scrollPane, getConfigureName(),
             JOptionPane.PLAIN_MESSAGE);
       }
 
@@ -267,7 +268,7 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
   }
 
   public Class[] getAttributeTypes() {
-    return new Class[] { String.class, String.class, IconConfig.class, KeyStroke.class, Dest.class, Boolean.class,
+    return new Class[] { String.class, String.class, AbstractToolbarItem.IconConfig.class, KeyStroke.class, Dest.class, Boolean.class,
         String[].class, String.class, String.class, String.class };
   }
 
@@ -292,7 +293,7 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
     }
     else if (INCLUDE_ALL_MAPS.equals(key)) {
       if (o instanceof String) {
-        o = new Boolean((String) o);
+        o = Boolean.valueOf((String) o);
       }
       incAllMaps = ((Boolean) o).booleanValue();
     }
@@ -368,7 +369,7 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
     return null;
   }
 
-  public class Counter implements Comparable {
+  public class Counter implements Comparable<Counter> {
     protected String sortKey;
     protected String breakKey;
     protected String name;
@@ -417,8 +418,7 @@ public class Inventory extends AbstractConfigurable implements GameComponent {
       return getName();
     }
 
-    public int compareTo(Object o) {
-      Counter n = (Counter) o;
+    public int compareTo(Counter n) {
       return sortKey.compareTo(n.sortKey);
     }
   }

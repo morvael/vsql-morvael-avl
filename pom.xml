@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>pl.derwinski</groupId>
     <artifactId>vsql-morvael-avl</artifactId>
-    <version>4.4.4</version>
+    <version>4.4.6</version>
 
     <properties>
         <vassal.version>3.6.19</vassal.version>
@@ -34,6 +34,11 @@
                 <version>3.11.0</version>
                 <configuration>
                     <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>                    
                     <release>11</release>
                 </configuration>
             </plugin>

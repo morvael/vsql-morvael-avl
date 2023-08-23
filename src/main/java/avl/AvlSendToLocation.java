@@ -115,14 +115,14 @@ public class AvlSendToLocation extends Decorator implements EditablePiece {
     if (command == null) {
       sendCommand = new KeyCommand(commandName, key, Decorator.getOutermost(this));
       backCommand = new KeyCommand(backCommandName, backKey, Decorator.getOutermost(this));
-      List l = new ArrayList();
+      List<KeyCommand> l = new ArrayList<>();
       if (commandName.length() > 0 && key != null) {
         l.add(sendCommand);
       }
       if (backCommandName.length() > 0 && backKey != null) {
         l.add(backCommand);
       }
-      command = (KeyCommand[]) l.toArray(new KeyCommand[l.size()]);
+      command = l.toArray(new KeyCommand[l.size()]);
     }
     for (int i = 0; i < command.length; i++) {
       if (command[i].getName().equals(backCommandName)) {
@@ -150,7 +150,7 @@ public class AvlSendToLocation extends Decorator implements EditablePiece {
       if (m != null) {
         int offset = 1;
         try {
-          offset = (new Integer((String) getProperty("Offset"))).intValue();
+          offset = Integer.parseInt((String) getProperty("Offset"));
         }
         catch (Exception e) {
           
@@ -292,10 +292,10 @@ public class AvlSendToLocation extends Decorator implements EditablePiece {
       b.add(clear);
       controls.add(b);
 
-      xInput = new IntConfigurer(null, "X Position:  ", new Integer(p.x));
+      xInput = new IntConfigurer(null, "X Position:  ", p.x);
       controls.add(xInput.getControls());
 
-      yInput = new IntConfigurer(null, "Y Position:  ", new Integer(p.y));
+      yInput = new IntConfigurer(null, "Y Position:  ", p.y);
       controls.add(yInput.getControls());
       
     }

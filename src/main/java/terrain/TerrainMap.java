@@ -35,6 +35,7 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.tools.ArchiveWriter;
 import VASSAL.tools.DataArchive;
+import org.apache.commons.io.IOUtils;
 
 /**
  * The terrain map. Holds all defined terrain for a board, plus appropriate
@@ -382,11 +383,12 @@ public class TerrainMap {
 	}
 
 	public void load() {
+        InputStream stream = null;
 		try {
 			final DataArchive archive = GameModule.getGameModule()
 					.getDataArchive();
-			final InputStream stream = archive
-					.getFileStream(getMapFileName(board));
+			stream = archive
+					.getInputStream(getMapFileName(board));
 			final InputStreamReader reader = new InputStreamReader(stream,
 					CHAR_SET);
 			final BufferedReader buffer = new BufferedReader(reader);
@@ -404,7 +406,9 @@ public class TerrainMap {
 			}
 		} catch (Exception e) {
 
-		}
+		} finally {
+            IOUtils.closeQuietly(stream);
+        }
 	}
 
 	public String getMapFileName(Board board) {

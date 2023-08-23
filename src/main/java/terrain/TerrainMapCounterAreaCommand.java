@@ -253,7 +253,7 @@ public class TerrainMapCounterAreaCommand extends Decorator implements Translata
       globalCommandKeyStrokeConfigurer = new HotKeyConfigurer(null, "Global Key Command:  ", trait.globalCommand.getKeyStroke());
       globalCommandReportSingleConfigurer = new BooleanConfigurer(null, "Suppress individual reports?", trait.globalCommand.isReportSingle());
       globalCommandSelectFromDeckConfigurer = new MassKeyCommand.DeckPolicyConfig();
-      globalCommandSelectFromDeckConfigurer.setValue(new Integer(trait.globalCommand.getSelectFromDeck()));
+      globalCommandSelectFromDeckConfigurer.setValue(trait.globalCommand.getSelectFromDeck());
 
       panel.add(commandTextConfigurer.getControls());
       panel.add(commandKeyConfigurer.getControls());
@@ -273,8 +273,8 @@ public class TerrainMapCounterAreaCommand extends Decorator implements Translata
       se.append((KeyStroke) commandKeyConfigurer.getValue());
       se.append(propertiesFilterConfigurer.getValueString());
       se.append((KeyStroke) globalCommandKeyStrokeConfigurer.getValue());
-      se.append(globalCommandReportSingleConfigurer.booleanValue().booleanValue());
-      se.append(globalCommandSelectFromDeckConfigurer.getIntValue());
+      se.append(globalCommandReportSingleConfigurer.booleanValue());
+      se.append(globalCommandSelectFromDeckConfigurer.getSingleValue());
       se.append(mapShaderId != null ? mapShaderId : "");
       se.append(descriptionConfigurer.getValueString());
       return TerrainMapCounterAreaCommand.ID + se.getValue();

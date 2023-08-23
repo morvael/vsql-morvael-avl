@@ -84,7 +84,7 @@ public class AvlInventory extends Inventory {
   protected int getCount(String mapName, String[] matchNames, String[] matchValues, String countPropertyName) {
     int count = 0;
     
-    PieceIterator pi = new PieceIterator(GameModule.getGameModule().getGameState().getPieces(), 
+    PieceIterator pi = new PieceIterator(GameModule.getGameModule().getGameState().getAllPieces().iterator(), 
         new AvlSelector(mapName, matchNames, matchValues));
 
     while (pi.hasMoreElements()) {
